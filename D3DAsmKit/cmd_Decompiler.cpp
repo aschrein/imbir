@@ -191,8 +191,8 @@ static HRESULT DisassembleMS(const void *pShaderBytecode, size_t BytecodeLength,
 	return S_OK;
 }
 
-
-static HRESULT DisassembleFlugan(const void *pShaderBytecode, size_t BytecodeLength, string *asmText)
+extern "C"
+__declspec(dllexport) HRESULT DisassembleFlugan(const void *pShaderBytecode, size_t BytecodeLength, string *asmText)
 {
 	// FIXME: This is a bit of a waste - we convert from a vector<char> to
 	// a void* + size_t to a vector<byte>

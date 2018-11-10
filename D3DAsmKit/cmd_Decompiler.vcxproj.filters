@@ -7,7 +7,7 @@
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
@@ -15,52 +15,73 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Assembler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd_Decompiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="decode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DecompileHLSL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="reflect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SignatureParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\hlslcc.h">
+    <ClInclude Include="debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\hlslcc.hpp">
+    <ClInclude Include="decode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pstdint.h">
+    <ClInclude Include="DecompileHLSL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal_includes\debug.h">
+    <ClInclude Include="hlslcc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal_includes\decode.h">
+    <ClInclude Include="hlslcc.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal_includes\hlsl_opcode_funcs_glsl.h">
+    <ClInclude Include="languages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal_includes\languages.h">
+    <ClInclude Include="reflect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal_includes\reflect.h">
+    <ClInclude Include="shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal_includes\shaderLimits.h">
+    <ClInclude Include="shaderLimits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal_includes\structs.h">
+    <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal_includes\tokens.h">
+    <ClInclude Include="structs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal_includes\tokensDX9.h">
+    <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="internal_includes\hlsl_opcode_funcs.glsl" />
+    <ClInclude Include="tokens.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tokensDX9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

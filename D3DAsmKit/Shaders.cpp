@@ -10,8 +10,8 @@
 
 using namespace std;
 
-FILE *LogFile = NULL;
-bool gLogDebug = false;
+//FILE *LogFile = NULL;
+//bool gLogDebug = false;
 
 static vector<string> enumerateFiles(string pathName, string filter = "") {
 	vector<string> files;
