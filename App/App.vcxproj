@@ -56,8 +56,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)ImGui;$(SolutionDir)HLSLDecompiler;$(SolutionDir)include;$(SolutionDir)D3DAsmKit;$(WindowsSdkDir)\include;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\shared;$(VC_IncludePath)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)include;$(SolutionDir)ImGui;$(SolutionDir)HLSLDecompiler;$(SolutionDir)include;$(SolutionDir)D3DAsmKit;$(WindowsSdkDir)\include;$(WindowsSdkDir)include\um;$(WindowsSdkDir)include\shared;$(VC_IncludePath)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -92,6 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\ImGuiColorTextEdit\TextEditor.cpp" />
     <ClCompile Include="..\ImGui\imgui.cpp" />
     <ClCompile Include="..\ImGui\imgui_demo.cpp" />
     <ClCompile Include="..\ImGui\imgui_draw.cpp" />
@@ -102,9 +103,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ImGuiColorTextEdit\TextEditor.h" />
     <ClInclude Include="..\ImGui\imconfig.h" />
     <ClInclude Include="..\ImGui\imgui.h" />
     <ClInclude Include="..\ImGui\imgui_internal.h" />
+    <ClInclude Include="..\ImGui\imgui_memory_editor.h" />
     <ClInclude Include="..\ImGui\imstb_rectpack.h" />
     <ClInclude Include="..\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\ImGui\imstb_truetype.h" />

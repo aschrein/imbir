@@ -46,7 +46,8 @@ vector<string> stringToLines(const char* start, size_t size);
 HRESULT disassembler(vector<byte> *buffer, vector<byte> *ret, const char *comment);
 vector<byte> assembler(vector<char> *asmFile, vector<byte> origBytecode);
 void writeLUT();
-HRESULT AssembleFluganWithSignatureParsing(vector<char> *assembly, vector<byte> *result_bytecode);
+extern "C"
+__declspec(dllexport) HRESULT AssembleFluganWithSignatureParsing(vector<char> *assembly, vector<byte> *result_bytecode);
 vector<byte> AssembleFluganWithOptionalSignatureParsing(vector<char> *assembly, bool assemble_signatures, vector<byte> *orig_bytecode);
 
 // TODO: reference additional headers your program requires here

@@ -564,7 +564,8 @@ out_free:
 	return hr;
 }
 
-HRESULT AssembleFluganWithSignatureParsing(vector<char> *assembly, vector<byte> *result_bytecode)
+extern "C"
+__declspec(dllexport) HRESULT AssembleFluganWithSignatureParsing(vector<char> *assembly, vector<byte> *result_bytecode)
 {
 	vector<byte> manufactured_bytecode;
 	HRESULT hr;

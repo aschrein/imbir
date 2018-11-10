@@ -2440,3 +2440,156 @@ vector<byte> assembler(vector<char> *asmFile, vector<byte> origBytecode) {
 	dwordBuffer[4] = hash[3];
 	return origBytecode;
 }
+
+extern "C"
+int d3d11Disassemble(byte const *pShaderBytecode, size_t BytecodeLength, char **pOut)
+{
+  byte fourcc[4];
+  DWORD fHash[4];
+  DWORD one;
+  DWORD fSize;
+  DWORD numChunks;
+  vector<DWORD> chunkOffsets;
+
+  // TODO: Add robust error checking here (buffer is at least as large as
+  // the header, etc). I've added a check for numChunks < 1 as that
+  // would lead to codeByteStart being used uninitialised
+  byte const * pPosition = pShaderBytecode;
+  std::memcpy(fourcc, pPosition, 4);
+  pPosition += 4;
+  std::memcpy(fHash, pPosition, 16);
+  pPosition += 16;
+  one = *(DWORD const*)pPosition;
+  pPosition += 4;
+  fSize = *(DWORD const*)pPosition;
+  pPosition += 4;
+  numChunks = *(DWORD const*)pPosition;
+  if (numChunks < 1)
+    return S_FALSE;
+  pPosition += 4;
+  chunkOffsets.resize(numChunks);
+  std::memcpy(chunkOffsets.data(), pPosition, 4 * numChunks);
+
+  char* asmBuffer;
+  size_t asmSize;
+  vector<byte> asmBuf;
+  ID3DBlob* pDissassembly = NULL;
+  HRESULT ok = D3DDisassemble(pShaderBytecode, BytecodeLength, D3D_DISASM_ENABLE_DEFAULT_VALUE_PRINTS, "", &pDissassembly);
+  if (FAILED(ok))
+    return ok;
+
+  asmBuffer = (char*)pDissassembly->GetBufferPointer();
+  asmSize = pDissassembly->GetBufferSize();
+
+  byte const* codeByteStart;
+  int codeChunk = 0;
+  for (DWORD i = 1; i <= numChunks; i++) {
+    codeChunk = numChunks - i;
+    codeByteStart = pShaderBytecode + chunkOffsets[numChunks - i];
+    if (memcmp(codeByteStart, "SHEX", 4) == 0 || memcmp(codeByteStart, "SHDR", 4) == 0)
+      break;
+  }
+  // FIXME: If neither SHEX or SHDR was found in the shader, codeByteStart will be garbage
+  vector<string> lines = stringToLines(asmBuffer, asmSize);
+  DWORD const* codeStart = (DWORD const*)(codeByteStart + 8);
+  bool codeStarted = false;
+  bool multiLine = false;
+  int multiLines = 0;
+  string s2;
+  vector<DWORD> o;
+  for (DWORD i = 0; i < lines.size(); i++) {
+    string s = lines[i];
+    if (s.find("#line") != string::npos)
+      break;
+    if (memcmp(s.c_str(), "//", 2) != 0) {
+      vector<DWORD> v;
+      if (!codeStarted) {
+        if (s.size() > 0 && s[0] != ' ') {
+          codeStarted = true;
+          v.push_back(*codeStart);
+          codeStart += 2;
+          string sNew = assembleAndCompare(s, v);
+          lines[i] = sNew;
+        }
+      }
+      else if (s.find("{ {") < s.size()) {
+        s2 = s;
+        multiLine = true;
+        multiLines = 1;
+      }
+      else if (s.find("} }") < s.size()) {
+        s2.append("\n");
+        s2.append(s);
+        s = s2;
+        multiLine = false;
+        multiLines++;
+        shader_ins const* ins = (shader_ins const*)codeStart;
+        v.push_back(*codeStart);
+        codeStart++;
+        DWORD length = *codeStart;
+        v.push_back(*codeStart);
+        codeStart++;
+        for (DWORD j = 2; j < length; j++) {
+          v.push_back(*codeStart);
+          codeStart++;
+        }
+        string sNew = assembleAndCompare(s, v);
+        auto sLines = stringToLines(sNew.c_str(), sNew.size());
+        size_t startLine = i - sLines.size() + 1;
+        for (size_t j = 0; j < sLines.size(); j++) {
+          lines[startLine + j] = sLines[j];
+        }
+        //lines[i] = sNew;
+      }
+      else if (multiLine) {
+        s2.append("\n");
+        s2.append(s);
+        multiLines++;
+      }
+      else if (s.size() > 0) {
+        shader_ins* ins = (shader_ins*)codeStart;
+        v.push_back(*codeStart);
+        codeStart++;
+
+        for (DWORD j = 1; j < ins->length; j++) {
+          v.push_back(*codeStart);
+          codeStart++;
+        }
+        string sNew;
+        if (s == "undecipherable custom data") {
+          string prev = lines[i - 1];
+          if (prev == "ret ")
+            v.clear();
+          if (v.size() == 1) {
+            ins = (shader_ins*)++codeStart;
+            while (ins->length == 0) {
+              ins = (shader_ins*)++codeStart;
+            }
+          }
+          sNew = "";
+        }
+        else {
+          sNew = assembleAndCompare(s, v);
+        }
+        lines[i] = sNew;
+      }
+    }
+  }
+  std::vector<char> ret;
+  ret.clear();
+  for (size_t i = 0; i < lines.size(); i++) {
+    for (size_t j = 0; j < lines[i].size(); j++) {
+      ret.insert(ret.end(), lines[i][j]);
+    }
+    ret.insert(ret.end(), '\n');
+  }
+  *pOut = (char*)malloc(ret.size());
+  memcpy(*pOut, &ret[0], ret.size());
+  pDissassembly->Release();
+  return 0;
+}
+extern "C"
+int d3d11Assemble(char const *pText, byte **pOut)
+{
+  return 0;
+}
