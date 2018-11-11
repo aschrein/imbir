@@ -10,6 +10,7 @@
 using OnChange = std::function<void(void)>;
 
 HRESULT disassembler(std::vector<byte> const &, std::string &, const char *comment);
+HRESULT assembler(std::string const &assembly, vector<byte> &result_bytecode);
 
 bool TokenizeCStyleNumber(const char * in_begin, const char * in_end, const char *& out_begin, const char *& out_end);
 bool TokenizeCStyleComment(const char * in_begin, const char * in_end, const char *& out_begin, const char *& out_end);
@@ -87,35 +88,58 @@ private:
   
   std::vector<byte> m_dxbc;
 
-  MemoryEditor med;
-  TextEditor ted;
+  MemoryEditor m_dxbcEd;
+  TextEditor m_dxasmEd;
+  bool m_dxasmDirty = true;
+  //TextEditor hlslEd;
+  void updateDisasm()
+  {
+    auto res = disassembler(m_dxbc, m_dxasm, "");
+    if (res)
+    {
+      m_dxasmEd.SetText("");
+      addLog("[ERROR][DXBCEditor] while disassembling, 'res' = %i\n", res);
+    }
+    else
+    {
+      m_dxasmEd.SetText(m_dxasm);
+    }
+  }
 public:
   DXBCEditor()
   {
-    ted.SetLanguageDefinition(DXBC());
+    m_dxasmEd.SetLanguageDefinition(DXBC());
   }
   void setBinary(byte const *pBytecode, size_t size, OnChange onChange)
   {
     assert(pBytecode && size);
     m_dxbc = std::vector<byte>(pBytecode, pBytecode + size);
     m_onChange = onChange;
-    auto res = disassembler(m_dxbc, m_dxasm, "");
-    if (res)
-    {
-      ted.SetText("");
-      addLog("[ERROR][DXBCEditor] while disassembling, res = %i\n", res);
-    }
-    else
-    {
-      ted.SetText(m_dxasm);
-    }
+    updateDisasm();
+    
   }
   void render()
   {
-    ted.Render("Shader Editor");
-    if (ted.IsTextChanged())
+    m_dxasmEd.Render("Shader Editor. CTRL-B to build.");
+    if (m_dxasmEd.IsTextChanged())
     {
       //addLog("[DEBUG][DXBCEditor] shader has been changed.\n");
+      m_dxasmDirty = true;
     }
+    if (m_dxasmDirty && ImGui::GetIO().KeyCtrl && ImGui::IsKeyDown('B'))
+    {
+      auto res = assembler(m_dxasmEd.GetText(), m_dxbc);
+      if (res)
+      {
+        m_dxbc = {};
+        addLog("[ERROR][DXBCEditor] while assembling, 'res' = %i\n", res);
+      }
+      else
+      {
+        updateDisasm();
+      }
+      m_dxasmDirty = false;
+    }
+    m_dxbcEd.DrawWindow("Byte code", &m_dxbc[0], m_dxbc.size());
   }
 };

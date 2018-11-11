@@ -2713,7 +2713,7 @@ static vector<DWORD> ComputeHash(byte const* input, DWORD size) {
 
 // origByteCode is modified in this function, so passing it by value!
 // asmFile is not modified, so passing it by pointer -DarkStarSword
-vector<byte> assembler(vector<char> *asmFile, vector<byte> origBytecode) {
+vector<byte> raw_assembler(std::string const &assembly, vector<byte> &origBytecode) {
   byte fourcc[4];
   DWORD fHash[4];
   DWORD one;
@@ -2740,10 +2740,10 @@ vector<byte> assembler(vector<char> *asmFile, vector<byte> origBytecode) {
   chunkOffsets.resize(numChunks);
   std::memcpy(chunkOffsets.data(), pPosition, 4 * numChunks);
 
-  char* asmBuffer;
+  char const * asmBuffer;
   size_t asmSize;
-  asmBuffer = asmFile->data();
-  asmSize = asmFile->size();
+  asmBuffer = assembly.c_str();
+  asmSize = assembly.size();
   byte* codeByteStart;
   int codeChunk = 0;
   for (DWORD i = 1; i <= numChunks; i++) {

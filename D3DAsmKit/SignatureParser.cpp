@@ -564,8 +564,7 @@ out_free:
 	return hr;
 }
 
-extern "C"
-__declspec(dllexport) HRESULT AssembleFluganWithSignatureParsing(vector<char> *assembly, vector<byte> *result_bytecode)
+HRESULT assembler(std::string const &assembly, vector<byte> &result_bytecode)
 {
 	vector<byte> manufactured_bytecode;
 	HRESULT hr;
@@ -578,15 +577,15 @@ __declspec(dllexport) HRESULT AssembleFluganWithSignatureParsing(vector<char> *a
 	// to Flugan's assembler. Later we should refactor this into the
 	// assembler itself.
 
-	hr = manufacture_shader_binary(assembly->data(), assembly->size(), &manufactured_bytecode);
+	hr = manufacture_shader_binary(assembly.c_str(), assembly.size(), &manufactured_bytecode);
 	if (FAILED(hr))
 		return E_FAIL;
 
-	*result_bytecode = assembler(assembly, manufactured_bytecode);
+	result_bytecode = raw_assembler(assembly, manufactured_bytecode);
 
 	return S_OK;
 }
-
+#if 0
 vector<byte> AssembleFluganWithOptionalSignatureParsing(vector<char> *assembly,
 		bool assemble_signatures, vector<byte> *orig_bytecode)
 {
@@ -594,7 +593,7 @@ vector<byte> AssembleFluganWithOptionalSignatureParsing(vector<char> *assembly,
 	HRESULT hr;
 
 	if (!assemble_signatures)
-		return assembler(assembly, *orig_bytecode);
+		return raw_assembler(assembly, *orig_bytecode);
 
 	hr = AssembleFluganWithSignatureParsing(assembly, &new_bytecode);
 	if (FAILED(hr))
@@ -602,3 +601,4 @@ vector<byte> AssembleFluganWithOptionalSignatureParsing(vector<char> *assembly,
 
 	return new_bytecode;
 }
+#endif

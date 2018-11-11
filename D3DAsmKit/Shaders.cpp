@@ -48,7 +48,7 @@ static vector<byte> readFile(string fileName) {
 	}
 	return buffer;
 }
-
+#if 0
 int _tmain(int argc, _TCHAR* argv[])
 {
 	int shaderNo = 1;
@@ -176,3 +176,4 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	return 0;
 }
+#endif

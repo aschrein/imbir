@@ -45,7 +45,7 @@ struct token_operand
 
 vector<string> stringToLines(const char* start, size_t size);
 HRESULT disassembler(vector<byte> *buffer, vector<byte> *ret, const char *comment);
-vector<byte> assembler(vector<char> *asmFile, vector<byte> origBytecode);
+vector<byte> raw_assembler(std::string const &assembly, vector<byte> &origBytecode);
 void writeLUT();
 extern "C"
 __declspec(dllexport) HRESULT AssembleFluganWithSignatureParsing(vector<char> *assembly, vector<byte> *result_bytecode);
