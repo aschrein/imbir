@@ -86,5 +86,8 @@
     <ClInclude Include="..\ImGui\imgui_memory_editor.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="DXBCEditor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

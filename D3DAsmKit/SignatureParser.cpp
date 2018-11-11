@@ -538,7 +538,7 @@ static HRESULT manufacture_shader_binary(const void *pShaderAsm, size_t AsmLengt
 			section_size = *((uint32_t*)section + 1) + sizeof(section_header);
 			all_sections_size += section_size;
 
-			if (gLogDebug) {
+			if (true) {
 				LogInfo("Constructed section size=%u:\n", section_size);
 				for (uint32_t i = 0; i < section_size; i++) {
 					if (i && i % 16 == 0)

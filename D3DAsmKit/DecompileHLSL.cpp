@@ -264,7 +264,7 @@ public:
 			return false;
 
 		string line1, line2;
-		if (gLogDebug)
+		if (true)
 		{
 			line1 = string(c + 0);
 			line1 = line1.substr(0, line1.find('\n'));

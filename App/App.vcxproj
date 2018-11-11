@@ -112,6 +112,7 @@
     <ClInclude Include="..\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\ImGui\misc\cpp\imgui_stdlib.h" />
+    <ClInclude Include="DXBCEditor.h" />
     <ClInclude Include="imgui_impl_dx11.h" />
     <ClInclude Include="imgui_impl_win32.h" />
   </ItemGroup>

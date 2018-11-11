@@ -17,6 +17,7 @@
 #include "stdint.h"
 #include "D3DCompiler.h"
 #include <string>
+#include <sstream>
 #include <vector>
 #include <unordered_map>
 
